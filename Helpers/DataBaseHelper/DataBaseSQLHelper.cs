@@ -209,6 +209,135 @@ namespace Helpers.DataBaseHelper
                 }
             }
         }
+
+        public static int ExecuteSql(string sqlString, ConnectionString cnStr)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[cnStr.ToString()].ConnectionString.ToString()))
+            {
+                using (SqlCommand cmd = new SqlCommand(sqlString, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        int rows = cmd.ExecuteNonQuery();
+                        return rows;
+                    }
+                    catch (System.Data.SqlClient.SqlException e)
+                    {
+                        connection.Close();
+                        throw e;
+                    }
+                }
+            }
+        }
+
+        public static int ExecuteSqlByTime(string sqlString, int times, ConnectionString cnStr)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[cnStr.ToString()].ConnectionString.ToString()))
+            {
+                using (SqlCommand cmd = new SqlCommand(sqlString, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        cmd.CommandTimeout = times;
+                        int rows = cmd.ExecuteNonQuery();
+                        return rows;
+                    }
+                    catch (System.Data.SqlClient.SqlException e)
+                    {
+                        connection.Close();
+                        throw e;
+                    }
+                }
+            }
+        }
+
+
+        #endregion
+
+        #region Stored procedure operation
+        /// <summary>
+        /// Execute the stored procedure, return SqlDataReader(Note: After calling this method, be sure to Close the SqlDataReader)
+        /// </summary>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <returns>SqlDataReader</returns>
+        public static SqlDataReader RunProcedure(string storedProcName, IDataParameter[] parameters, ConnectionString cnStr)
+        {
+            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[cnStr.ToString()].ConnectionString.ToString());
+            SqlDataReader returnReader;
+            connection.Open();
+            SqlCommand command = BuildQueryCommand(connection, storedProcName, parameters);
+            command.CommandType = CommandType.StoredProcedure;
+            returnReader = command.ExecuteReader(CommandBehavior.CloseConnection);
+            return returnReader;
+
+        }
+
+        /// <summary>
+        /// Execute the stored procedure
+        /// </summary>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <param name="tableName">Table name in DataSet result</param>
+        /// <returns>DataSet</returns>
+        public static DataSet RunProcedure(string storedProcName, IDataParameter[] parameters, string tableName, ConnectionString cnStr)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[cnStr.ToString()].ConnectionString.ToString()))
+            {
+                DataSet dataSet = new DataSet();
+                connection.Open();
+                SqlDataAdapter sqlDA = new SqlDataAdapter();
+                sqlDA.SelectCommand = BuildQueryCommand(connection, storedProcName, parameters);
+                sqlDA.Fill(dataSet, tableName);
+                connection.Close();
+                return dataSet;
+            }
+        }
+
+        public static DataSet RunProcedure(string storedProcName, IDataParameter[] parameters, string tableName, int times, ConnectionString cnStr)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[cnStr.ToString()].ConnectionString.ToString()))
+            {
+                DataSet dataSet = new DataSet();
+                connection.Open();
+                SqlDataAdapter sqlDA = new SqlDataAdapter();
+                sqlDA.SelectCommand = BuildQueryCommand(connection, storedProcName, parameters);
+                sqlDA.SelectCommand.CommandTimeout = times;
+                sqlDA.Fill(dataSet, tableName);
+                connection.Close();
+                return dataSet;
+            }
+        }
+
+        /// <summary>
+        /// Build a SqlCommand object (to return a result set, not an integer value)
+        /// </summary>
+        /// <param name="connection">Database Connectivity</param>
+        /// <param name="storedProcName">Stored procedure name</param>
+        /// <param name="parameters">Stored procedure parameters</param>
+        /// <returns>SqlCommand</returns>
+        private static SqlCommand BuildQueryCommand(SqlConnection connection, string storedProcName, IDataParameter[] parameters)
+        {
+            SqlCommand command = new SqlCommand(storedProcName, connection);
+            command.CommandType = CommandType.StoredProcedure;
+            foreach (SqlParameter parameter in parameters)
+            {
+                if (parameter != null)
+                {
+                    // Check the output parameter of the unassigned value and assign it as DBNull.Value.
+                    if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
+                        (parameter.Value == null))
+                    {
+                        parameter.Value = DBNull.Value;
+                    }
+                    command.Parameters.Add(parameter);
+                }
+            }
+
+            return command;
+        }
         #endregion
     }
 }
