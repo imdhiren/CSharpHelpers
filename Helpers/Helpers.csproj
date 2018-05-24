@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Cookie\CookieHelper.cs" />
     <Compile Include="CSV\CsvHelper.cs" />
+    <Compile Include="DataBaseHelper\DataBaseSQLHelper.cs" />
     <Compile Include="DataTableToEntity\DataTableToEntityHelper.cs" />
     <Compile Include="EncryptionDecryption\DES\DESHelper.cs" />
     <Compile Include="ListToDataTable\ListToDataTableHelper.cs" />
@@ -51,8 +52,6 @@
     <Compile Include="Session\SessionHelper.cs" />
     <Compile Include="SQLHelper\SQLHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataBaseHelper\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
