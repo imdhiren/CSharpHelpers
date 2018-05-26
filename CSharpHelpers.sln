@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpHelpers", "CSharpHelp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helpers", "Helpers\Helpers.csproj", "{0D5079A9-2E58-4EF2-8AE5-C0993C02B684}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Help", "Help", "{2150E935-747B-4AA3-AD2C-F5873EB0CC59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StringHelper", "StringHelper", "{538051DC-B45B-470D-A60E-F01FB747890E}"
+	ProjectSection(SolutionItems) = preProject
+		C:\Users\Dhiren\Desktop\New folder\StringHelpersWithValidation-master\StringHelpersWithValidation-master\readme.md = C:\Users\Dhiren\Desktop\New folder\StringHelpersWithValidation-master\StringHelpersWithValidation-master\readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +31,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{538051DC-B45B-470D-A60E-F01FB747890E} = {2150E935-747B-4AA3-AD2C-F5873EB0CC59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B274D54-48FE-4DF2-9177-1A55720A8B7C}

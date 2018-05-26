@@ -53,6 +53,7 @@
     <Compile Include="Session\SessionHelper.cs" />
     <Compile Include="SQLHelper\SQLHelper.cs" />
     <Compile Include="Utilities\DecimalUtility.cs" />
+    <Compile Include="Utilities\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
